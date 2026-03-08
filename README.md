@@ -33,6 +33,37 @@
 <img width="2688" height="1600" alt="Group 7154 (1)" src="https://github.com/user-attachments/assets/c5ee0412-6fb5-4fb6-ab5b-bafae4209ca6" />
 
 
+## Fork Changes (broven/litellm)
+
+This is a privately maintained fork of [BerriAI/litellm](https://github.com/BerriAI/litellm). The following changes have been made on top of the upstream codebase:
+
+### Aggressive Cooldown & Retry Strategy
+
+- **All error types trigger cooldown** — upstream only cools down 429, 401, 408, 404, and 5xx. This fork cools down all errors so failed deployments are excluded from routing immediately.
+- **Exponential cooldown backoff** — deployments that fail repeatedly get progressively longer cooldown periods instead of a fixed duration.
+- **Retry all error types across deployments** — all errors (400, 403, 409, 422, etc.) are retried on other deployments as long as healthy ones exist. Only context-window and content-policy errors still raise immediately (to trigger fallback routing).
+- **Auto-set `num_retries` to deployment count** — when not explicitly configured, `num_retries` is automatically set to `len(deployments) - 1`, giving every deployment a chance before giving up.
+
+### Cooldown Observability
+
+- **`GET /model/cooldowns` API endpoint** — exposes per-deployment cooldown status including remaining time and the triggering exception.
+- **Dashboard health badges** — the Models table shows green/red badges for each deployment's health status, polling `/model/cooldowns` every 5 seconds.
+
+### Cost-Based Routing Fix
+
+- **Zero-cost models treated as free** — fixed a bug where `input_cost_per_token: 0` / `output_cost_per_token: 0` was treated as falsy, causing free models to fall back to a default cost of 5.0 and appear as the most expensive.
+
+### Build & Deployment
+
+- **Dockerfile builds litellm-proxy-extras from local source** — ensures Prisma migrations stay in sync between the proxy and the extras package during Docker builds.
+- **GitHub Actions workflow** — builds and pushes Docker images to `ghcr.io/broven/litellm` on push to main.
+
+### Bug Fixes
+
+- **Fixed unclosed `Query()` parenthesis** in `agent_endpoints/endpoints.py` that caused a syntax error.
+
+---
+
 ## Use LiteLLM for
 
 <details open>
