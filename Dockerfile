@@ -24,6 +24,9 @@ COPY . .
 # Convert Windows line endings to Unix and make executable
 RUN sed -i 's/\r$//' docker/build_admin_ui.sh && chmod +x docker/build_admin_ui.sh && ./docker/build_admin_ui.sh
 
+# Build litellm-proxy-extras from local source so migrations stay in sync
+RUN cd /app/litellm-proxy-extras && rm -rf dist && python -m build
+
 # Build the package
 RUN rm -rf dist/* && python -m build
 
@@ -91,6 +94,10 @@ COPY --from=builder /wheels/ /wheels/
 
 # Install the built wheel using pip; again using a wildcard if it's the only file
 RUN pip install *.whl /wheels/* --no-index --find-links=/wheels/ && rm -f *.whl && rm -rf /wheels
+
+# Reinstall litellm-proxy-extras from local build to include latest migrations
+COPY --from=builder /app/litellm-proxy-extras/dist/*.whl /tmp/
+RUN pip install --force-reinstall --no-deps /tmp/litellm_proxy_extras-*.whl && rm -f /tmp/litellm_proxy_extras-*.whl
 
 # Replace the nodejs-wheel-binaries bundled node with the system node (fixes CVE-2025-55130)
 RUN NODEJS_WHEEL_NODE=$(find /usr/lib -path "*/nodejs_wheel/bin/node" 2>/dev/null) && \
