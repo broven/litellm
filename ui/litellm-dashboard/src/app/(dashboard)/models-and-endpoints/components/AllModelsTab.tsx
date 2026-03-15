@@ -6,9 +6,13 @@ import { AllModelsDataTable } from "@/components/model_dashboard/all_models_tabl
 import { columns } from "@/components/molecules/models/columns";
 import { getDisplayModelName } from "@/components/view_model/model_name_display";
 import { getDeploymentCooldownStatus } from "@/components/networking";
+import DeleteResourceModal from "@/components/common_components/DeleteResourceModal";
+import NotificationsManager from "@/components/molecules/notifications_manager";
+import { modelDeleteCall } from "@/components/networking";
 import { InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { PaginationState, SortingState } from "@tanstack/react-table";
+import { useQueryClient } from "@tanstack/react-query";
 import { Grid, TabPanel } from "@tremor/react";
 import { Badge, Button, Select, Skeleton, Space, Typography } from "antd";
 import ModelSettingsModal from "@/components/model_dashboard/ModelSettingsModal/ModelSettingsModal";
@@ -37,8 +41,9 @@ const AllModelsTab = ({
   setSelectedTeamId,
 }: AllModelsTabProps) => {
   const { data: modelCostMapData, isLoading: isLoadingModelCostMap } = useModelCostMap();
-  const { userId, userRole, premiumUser, accessToken } = useAuthorized();
+  const { accessToken, userId, userRole, premiumUser } = useAuthorized();
   const { data: teams, isLoading: isLoadingTeams } = useTeams();
+  const queryClient = useQueryClient();
 
   const { data: cooldownData } = useQuery({
     queryKey: ["deployment-cooldowns"],
@@ -114,7 +119,7 @@ const AllModelsTab = ({
     return sort.desc ? "desc" : "asc";
   }, [sorting]);
 
-  const { data: rawModelData, isLoading: isLoadingModelsInfo } = useModelsInfo(
+  const { data: rawModelData, isLoading: isLoadingModelsInfo, refetch: refetchModels } = useModelsInfo(
     currentPage,
     pageSize,
     debouncedSearch || undefined,
@@ -138,6 +143,9 @@ const AllModelsTab = ({
     if (!rawModelData) return { data: [] };
     return transformModelData(rawModelData, getProviderFromModel);
   }, [rawModelData, modelCostMapData]);
+
+  const [deleteModalModelId, setDeleteModalModelId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Get pagination metadata from the response
   const paginationMeta = useMemo(() => {
@@ -207,6 +215,28 @@ const AllModelsTab = ({
     setCurrentPage(1);
     setPagination({ pageIndex: 0, pageSize: 50 });
     setSorting([]);
+  };
+
+  const modelToDelete = useMemo(() => {
+    if (!deleteModalModelId || !modelData?.data) return null;
+    return modelData.data.find((model: any) => model.model_info.id === deleteModalModelId);
+  }, [deleteModalModelId, modelData]);
+
+  const handleDeleteModel = async () => {
+    if (!accessToken || !deleteModalModelId) return;
+    try {
+      setDeleteLoading(true);
+      await modelDeleteCall(accessToken, deleteModalModelId);
+      NotificationsManager.success("Model deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["models", "list"] });
+      refetchModels();
+    } catch (error) {
+      console.error("Error deleting model:", error);
+      NotificationsManager.fromBackend(error);
+    } finally {
+      setDeleteLoading(false);
+      setDeleteModalModelId(null);
+    }
   };
 
   return (
@@ -524,6 +554,7 @@ const AllModelsTab = ({
                 expandedRows,
                 setExpandedRows,
                 cooldownMap,
+                setDeleteModalModelId,
               )}
               data={filteredData}
               isLoading={isLoadingModelsInfo}
@@ -532,10 +563,40 @@ const AllModelsTab = ({
               pagination={pagination}
               onPaginationChange={setPagination}
               enablePagination={true}
+              onRowClick={(model: any) => setSelectedModelId(model.model_info.id)}
             />
           </div>
         </div>
       </Grid>
+
+      <DeleteResourceModal
+        isOpen={!!deleteModalModelId}
+        title="Delete Model"
+        alertMessage="This action cannot be undone."
+        message="Are you sure you want to delete this model?"
+        resourceInformationTitle="Model Information"
+        resourceInformation={modelToDelete ? [
+          {
+            label: "Model Name",
+            value: modelToDelete.model_name || "Not Set",
+          },
+          {
+            label: "LiteLLM Model Name",
+            value: modelToDelete.litellm_model_name || "Not Set",
+          },
+          {
+            label: "Provider",
+            value: modelToDelete.provider || "Not Set",
+          },
+          {
+            label: "Created By",
+            value: modelToDelete.model_info?.created_by || "Not Set",
+          },
+        ] : []}
+        onCancel={() => setDeleteModalModelId(null)}
+        onOk={handleDeleteModel}
+        confirmLoading={deleteLoading}
+      />
       <ModelSettingsModal
         isVisible={isModelSettingsModalVisible}
         onCancel={() => setIsModelSettingsModalVisible(false)}
