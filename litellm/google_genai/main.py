@@ -190,6 +190,7 @@ class GenerateContentHelper:
             optional_params=dict(generate_content_config_dict),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )

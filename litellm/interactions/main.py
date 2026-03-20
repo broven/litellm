@@ -309,7 +309,10 @@ def create(
         litellm_logging_obj.update_environment_variables(
             model=model,
             optional_params=dict(optional_params),
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -419,7 +422,10 @@ def get(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"interaction_id": interaction_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -522,7 +528,10 @@ def delete(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"interaction_id": interaction_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -625,7 +634,10 @@ def cancel(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"interaction_id": interaction_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 

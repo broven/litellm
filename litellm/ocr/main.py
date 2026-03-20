@@ -304,6 +304,7 @@ def ocr(
             litellm_params={
                 "litellm_call_id": litellm_call_id,
                 "api_base": api_base,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )

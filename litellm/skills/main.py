@@ -209,6 +209,7 @@ def create_skill(
             optional_params=request_body,
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -394,6 +395,7 @@ def list_skills(
             optional_params=query_params,
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -561,6 +563,7 @@ def get_skill(
             optional_params={"skill_id": skill_id},
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -727,6 +730,7 @@ def delete_skill(
             optional_params={"skill_id": skill_id},
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )

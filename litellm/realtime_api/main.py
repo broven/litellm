@@ -139,7 +139,7 @@ async def acreate_realtime_client_secret(
     litellm_logging_obj.update_environment_variables(
         model=model_name,
         optional_params={"expires_after": expires_after, "session": session},
-        litellm_params={"api_base": resolved_api_base},
+        litellm_params={"api_base": resolved_api_base, "model_info": kwargs.get("model_info", {})},
         custom_llm_provider=custom_llm_provider,
     )
     request_data = req.model_dump(exclude_none=True, exclude={"model"})
@@ -189,7 +189,7 @@ async def arealtime_calls(
     litellm_logging_obj.update_environment_variables(
         model=model_name,
         optional_params={"realtime_calls": True, "session": session},
-        litellm_params={"api_base": resolved_api_base},
+        litellm_params={"api_base": resolved_api_base, "model_info": kwargs.get("model_info", {})},
         custom_llm_provider=custom_llm_provider,
     )
     return await base_llm_http_handler.async_realtime_calls_handler(

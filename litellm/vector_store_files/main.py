@@ -155,6 +155,7 @@ def create(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -285,6 +286,7 @@ def list(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -396,6 +398,7 @@ def retrieve(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -507,6 +510,7 @@ def retrieve_content(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -629,6 +633,7 @@ def update(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -742,6 +747,7 @@ def delete(
             litellm_params={
                 "vector_store_id": vector_store_id,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,

@@ -237,6 +237,7 @@ def video_generation(  # noqa: PLR0915
             optional_params=dict(video_generation_request_params),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **video_generation_request_params,
             },
             custom_llm_provider=custom_llm_provider,
@@ -354,6 +355,7 @@ def video_content(
             optional_params=dict(video_content_request_params),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **video_content_request_params,
             },
             custom_llm_provider=custom_llm_provider,
@@ -624,6 +626,7 @@ def video_remix(  # noqa: PLR0915
             optional_params=dict(video_remix_request_params),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **video_remix_request_params,
             },
             custom_llm_provider=custom_llm_provider,
@@ -840,6 +843,7 @@ def video_list(  # noqa: PLR0915
             optional_params=dict(video_list_request_params),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **video_list_request_params,
             },
             custom_llm_provider=custom_llm_provider,
@@ -1060,6 +1064,7 @@ def video_status(  # noqa: PLR0915
             optional_params=dict(video_status_request_params),
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
                 **video_status_request_params,
             },
             custom_llm_provider=custom_llm_provider,

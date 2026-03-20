@@ -292,6 +292,7 @@ def search(
             litellm_params={
                 "litellm_call_id": litellm_call_id,
                 "api_base": complete_url,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=search_provider,
         )

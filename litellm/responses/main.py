@@ -935,6 +935,7 @@ def delete_responses(
             },
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -1115,6 +1116,7 @@ def get_responses(
             },
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -1267,7 +1269,10 @@ def list_input_items(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"response_id": response_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -1430,6 +1435,7 @@ def cancel_responses(
             },
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -1633,6 +1639,7 @@ def compact_responses(
             litellm_params={
                 **responses_api_request_params,
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )

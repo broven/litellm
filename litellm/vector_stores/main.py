@@ -241,6 +241,7 @@ def create(
             },
             litellm_params={
                 "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
@@ -450,6 +451,7 @@ def search(
             litellm_params={
                 "litellm_call_id": litellm_call_id,
                 "vector_store_id": vector_store_id,
+                "model_info": kwargs.get("model_info", {}),
                 **litellm_params.model_dump(exclude_none=True),
             },
             custom_llm_provider=custom_llm_provider,
@@ -588,7 +590,10 @@ def retrieve(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"vector_store_id": vector_store_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -740,7 +745,10 @@ def list(
                 "limit": limit,
                 "order": order,
             },
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -902,7 +910,10 @@ def update(
                 "name": name,
                 **vector_store_update_optional_params,
             },
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
@@ -1038,7 +1049,10 @@ def delete(
         litellm_logging_obj.update_environment_variables(
             model=None,
             optional_params={"vector_store_id": vector_store_id},
-            litellm_params={"litellm_call_id": litellm_call_id},
+            litellm_params={
+                "litellm_call_id": litellm_call_id,
+                "model_info": kwargs.get("model_info", {}),
+            },
             custom_llm_provider=custom_llm_provider,
         )
 
