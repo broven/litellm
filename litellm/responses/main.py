@@ -752,6 +752,7 @@ def responses(
                 "litellm_call_id": litellm_call_id,
                 "metadata": metadata_for_callbacks,
                 "litellm_metadata": kwargs.get("litellm_metadata", {}),
+                "model_info": kwargs.get("model_info", {}),
             },
             custom_llm_provider=custom_llm_provider,
         )
